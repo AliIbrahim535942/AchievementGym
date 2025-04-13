@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import connection_db from "./config/connection_db.js";
 import userRouter from "./routes/users.js";
+import postRouter from "./routes/post.js";
 configDotenv();
 const app = express();
 const port = process.env.PORT || 8000;
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.options("*", cors());
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 app.use("/api/users", userRouter);
+app.use("/api/posts", postRouter);
 app.use("/", (req, res, next) => {
   res.send("Welcome");
 });
