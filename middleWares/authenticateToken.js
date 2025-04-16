@@ -4,17 +4,15 @@ export default function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
 
   if (!token) {
-    responseHandler.error(res, "Unauthorized", 401, {});
-    return;
+    return responseHandler.error(res, "Unauthorized", 401, {});
   }
-
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
-    if (err) {
-      console.log(err);
+// console.log(process.env.JWT_SECRET_KEY);
+  jwt.verify(token, "qwertyuiopASDFGHJKL1234567890", (error, user) => {
+    if (error) {
+      console.log(error);
       return responseHandler.error(res, "Forbidden", 403, {});
     }
-
     req.user = { ...user };
+    return next();
   });
-  next();
 }

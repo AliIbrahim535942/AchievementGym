@@ -25,6 +25,7 @@ async function updatePost(req, res, next) {
       { postId },
       { $set: updatedFields }
     );
+    return responseHandler.success(res, "post updated.", updatedPost);
   } catch (error) {
     return responseHandler.error(res, "server error", 500, {
       error: error.message,

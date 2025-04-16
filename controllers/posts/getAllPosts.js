@@ -1,18 +1,18 @@
 import Post from "../../models/post.js";
 import { responseHandler } from "../../utils/responseHandler.js";
 async function getAllPosts(req, res, next) {
-  const { PageNumber } = req.query;
+  const { PageNumber = 0 } = req.query;
   try {
     const posts = await Post.aggregate([
       {
         $lookup: {
-          from: "coachs",
+          from: "Coachs",
           localField: "coachId",
           foreignField: "coachId",
-          as: "coach",
+          as: "Coach",
         },
       },
-      { $unwind: "$coach" },
+      { $unwind: "$Coach" },
       { $sort: { date: -1 } },
       {
         $project: {
@@ -20,12 +20,12 @@ async function getAllPosts(req, res, next) {
           imageUrl: 1,
           coachId: 1,
           date: 1,
-          "coach.firstName": 1,
-          "coach.lastName": 1,
-          "coach.imageUrl": 1,
+          "Coach.firstName": 1,
+          "Coach.lastName": 1,
+          "Coach.imageUrl": 1,
         },
       },
-      { $skip: PageNumber * 10 },
+      { $skip: Number(PageNumber) * 10 },
       { $limit: 10 },
     ]);
     return responseHandler.success(res, "The posts fetched successfully ", {

@@ -14,7 +14,8 @@ async function deletePost(req, res, next) {
     if (post.coachId != coachId) {
       return responseHandler.error(res, "you can only delete your posts.", 403);
     }
-    await post.remove();
+    await Post.findOneAndDelete({ postId });
+    return responseHandler.success(res, "post deleted successfully");
   } catch (error) {
     return responseHandler.error(res, "server error", 500, {
       error: error.message,

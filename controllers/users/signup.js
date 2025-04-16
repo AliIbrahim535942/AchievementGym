@@ -1,7 +1,7 @@
 import { responseHandler } from "../../utils/responseHandler.js";
 import { getNextSequence } from "../../models/counter.js";
 import path from "path";
-import Coach from "../../models/Coach.js";
+import Coach from "../../models/coach.js";
 import GymMember from "../../models/GymMember.js";
 export default async function signup(req, res, next) {
   try {
