@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { responseHandler } from "../../utils/responseHandler.js";
 import Coach from "../../models/coach.js";
-import GymMember from "../../models/GymMember.js";
+import GymMember from "../../models/gymMember.js";
 async function signin(req, res, next) {
   const { email, password, accountType } = req.body;
 
