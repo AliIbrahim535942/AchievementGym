@@ -1,9 +1,9 @@
 import { Router } from "express";
 //controllers import
-import addSession from "../controllers/sessions/addSession.js";
-import updateSessionStatus from "../controllers/sessions/updateSessionStatus.js";
-import getAllSessions from "../controllers/sessions/getAllSessions.js";
-import getSession from "../controllers/sessions/getSession.js";
+import addSession from "../controllers/sessions/addSession.controller.js";
+import updateSessionStatus from "../controllers/sessions/updateSessionStatus.controller.js";
+import getAllSessions from "../controllers/sessions/getAllSessions.controller.js";
+import getSession from "../controllers/sessions/getSession.controller.js";
 //middleWares import
 import authenticateToken from "../middleWares/authenticateToken.js";
 import validator from "../middleWares/validator.js";

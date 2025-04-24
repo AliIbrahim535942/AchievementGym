@@ -1,6 +1,6 @@
 import { Router } from "express";
-import signin from "../controllers/users/signin.js";
-import signup from "../controllers/users/signup.js";
+import signin from "../controllers/users/signin.controller.js";
+import signup from "../controllers/users/signup.controller.js";
 import passwordHashing from "../middleWares/passwordHashing.js";
 import { uploadOptional } from "../middleWares/multerConfig.js";
 import validator from "../middleWares/validator.js";

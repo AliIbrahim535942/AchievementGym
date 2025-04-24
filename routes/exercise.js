@@ -1,4 +1,4 @@
-import getExercises from "../controllers/exercises/getExercises.js";
+import getExercises from "../controllers/exercises/getExercises.controller.js";
 import { Router } from "express";
 import authenticateToken from "../middleWares/authenticateToken.js";
 const exerciseRouter = Router();
