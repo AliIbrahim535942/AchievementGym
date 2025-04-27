@@ -1,13 +1,13 @@
-import { Router } from "express";
-import { uploadOptional } from "../middleWares/multerConfig.js";
 import validator from "../middleWares/validator.js";
 import authenticationToken from "../middleWares/authenticateToken.js";
-//controllers
+import { uploadOptional } from "../middleWares/multerConfig.js";
+import { Router } from "express";
+//  Controller
 import updatePost from "../controllers/posts/updatePost.controller.js";
 import deletePost from "../controllers/posts/deletePost.controller.js";
 import addPost from "../controllers/posts/addPost.controller.js";
 import getAllPosts from "../controllers/posts/getAllPosts.controller.js";
-//vatidation schemas
+//  Validation Schemas
 import addPostValidationShema from "../validations/posts/addPostSchema.js";
 import deletePostValidationShema from "../validations/posts/deletePostSchema.js";
 import getAllPostsValidationSchema from "../validations/posts/getAllPostsSchema.js";

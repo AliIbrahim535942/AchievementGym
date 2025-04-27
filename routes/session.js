@@ -1,13 +1,12 @@
+import authenticateToken from "../middleWares/authenticateToken.js";
+import validator from "../middleWares/validator.js";
 import { Router } from "express";
-//controllers import
+//  Controller
 import addSession from "../controllers/sessions/addSession.controller.js";
 import updateSessionStatus from "../controllers/sessions/updateSessionStatus.controller.js";
 import getAllSessions from "../controllers/sessions/getAllSessions.controller.js";
 import getSession from "../controllers/sessions/getSession.controller.js";
-//middleWares import
-import authenticateToken from "../middleWares/authenticateToken.js";
-import validator from "../middleWares/validator.js";
-// validation schemas import
+//  Validation Schemas
 import updateSessionStatusSchema from "../validations/sessions/updateSessionStatusSchema.js";
 import addSessionSchema from "../validations/sessions/addSessionSchema.js";
 import getSessionSchema from "../validations/sessions/getSessionSchema.js";
@@ -30,4 +29,5 @@ sessionRouter.post(
   validator(addSessionSchema, "body"),
   addSession
 );
+
 export default sessionRouter;
