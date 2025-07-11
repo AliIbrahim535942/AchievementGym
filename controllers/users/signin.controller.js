@@ -15,9 +15,9 @@ async function signin(req, res, next) {
           "memberId email password coachId -_id"
         );
   if (!user) {
-    return responseHandler.notFound(res, "you dont have an account");
+    return responseHandler.notFound(res, "account is not exist");
   }
-  const isMatch = bcrypt.compare(user.password, password);
+  const isMatch = await bcrypt.compare( password ,user.password);
   if (!isMatch) {
     return responseHandler.error(res, "wrong password", 403);
   }

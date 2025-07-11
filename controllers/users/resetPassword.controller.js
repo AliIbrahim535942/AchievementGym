@@ -14,10 +14,10 @@ export default async function resetPassword(req, res, next) {
 
     const tokenInfo = jwt.verify(token, process.env.SECRET_KEY);
     let user;
-    if (tokenInfo.accountType == "Gymmember") {
-      user = await GymMember.findById(tokenInfo.userId);
+    if (tokenInfo.accountType == "GymMember") {
+      user = await GymMember.findOne({memberId:tokenInfo.userId});
     } else if (tokenInfo.accountType == "Coach") {
-      user = await Coach.findById(tokenInfo.userId);
+      user = await Coach.findOne({coachId:tokenInfo.userId});
     }
     if (!user) {
       return responseHandler.error(res, "User not found", 404);

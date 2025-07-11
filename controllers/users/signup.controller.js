@@ -37,10 +37,20 @@ export default async function signup(req, res, next) {
         imageUrl,
       });
       await newMember.save();
+      const memberReturnedInfo = {
+        memberId: newMember.memberId,
+        firstName: newMember.firstName,
+        lastName: newMember.lastName,
+        bio: newMember.bio,
+        sportType: newMember.sportType,
+        coachId: newMember.coachId,
+        imageUrl: newMember.imageUrl,
+        accountType: accountType,
+      };
       return responseHandler.success(
         res,
         `user craeated successfuly`,
-        newMember
+        memberReturnedInfo
       );
     } else if (accountType == "Coach") {
       if (await Coach.findOne({ $or: [{ email }, { phoneNumber }] })) {
@@ -58,10 +68,19 @@ export default async function signup(req, res, next) {
         imageUrl,
       });
       await newCoach.save();
+      const coachReturnedInfo = {
+        coachId: newCoach.coachId,
+        firstName: newCoach.firstName,
+        lastName: newCoach.lastName,
+        bio: newCoach.bio,
+        sportType: newCoach.sportType,
+        imageUrl: newCoach.imageUrl,
+        accountType: accountType,
+      };
       return responseHandler.success(
         res,
         `coach craeated successfuly`,
-        newCoach
+        coachReturnedInfo
       );
     }
   } catch (error) {
