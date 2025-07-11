@@ -26,8 +26,8 @@ postRouter.delete(
   deletePost
 );
 postRouter.get(
-  "/getAllPosts",
-  validator(getAllPostsValidationSchema, "query"),
+  "/getAllPosts/:pageNumber",
+  validator(getAllPostsValidationSchema, "params"),
   getAllPosts
 );
 postRouter.put(

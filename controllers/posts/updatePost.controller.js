@@ -24,8 +24,14 @@ async function updatePost(req, res, next) {
     const updatedPost = await Post.findOneAndUpdate(
       { postId },
       { $set: updatedFields }
-    );
-    return responseHandler.success(res, "post updated.", updatedPost);
+    )
+    const returnedPostInfo = {
+      postId: updatedPost.postId,
+      coachId: updatedPost.coachId,
+      content: updatedPost.content,
+      imageUrl: updatedPost.imageUrl,
+    };
+    return responseHandler.success(res, "post updated.", returnedPostInfo);
   } catch (error) {
     return responseHandler.error(res, "server error", 500, {
       error: error.message,

@@ -2,3 +2,5 @@ node_modules
 uploads/*
 !uploads/.gitkeep
 .env
+Achiement_GYM_ERD.drawio
+exercises_full.json
