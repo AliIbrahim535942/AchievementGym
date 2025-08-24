@@ -17,14 +17,18 @@ async function signin(req, res, next) {
   if (!user) {
     return responseHandler.notFound(res, "account is not exist");
   }
-  const isMatch = await bcrypt.compare( password ,user.password);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return responseHandler.error(res, "wrong password", 403);
   }
   const { password: removerdPassword, ...tokenInfo } = user._doc;
-  console.log({ ...tokenInfo, accountType }, process.env.SECRET_KEY);
+  console.log({ ...tokenInfo, accountType });
 
   const token = jwt.sign({ ...tokenInfo, accountType }, process.env.SECRET_KEY);
-  return responseHandler.success(res, "login successfuly", { token: token });
+  return responseHandler.success(res, "login successfuly", {
+    token: token,
+    accountType,
+    tokenInfo
+  });
 }
 export default signin;

@@ -6,7 +6,7 @@ async function updateSessionStatus(req, res, next) {
   const { memberId, sessionId, status } = req.body;
   const { accountType, coachId } = req.user;
   if (accountType != "Coach") {
-    return responseHandler.error(res, "only Coachs can add sessions.", 403);
+    return responseHandler.error(res, "only Coachs can update sessions status.", 403);
   }
   try {
     const memberInfo = await GymMember.findOne({ memberId });

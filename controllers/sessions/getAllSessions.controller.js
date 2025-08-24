@@ -1,26 +1,36 @@
 import Session from "../../models/session.js";
 import { responseHandler } from "../../utils/responseHandler.js";
+
 async function getAllSessions(req, res, next) {
-  const { memberId, coachId, accountType } = req.user;
+  const { accountType } = req.user;
   let filter;
+  
   try {
+    // تحديد الفلتر حسب نوع المستخدم
     if (accountType == "Coach") {
+      const { coachId } = req.user;
       filter = { coachId: coachId };
     } else if (accountType == "GymMember") {
+      const { memberId } = req.user;
       filter = { memberId };
+    } else {
+      // إذا كان نوع آخر، لا نعرض أي جلسات
+      return responseHandler.error(res, "Unauthorized access", 403);
     }
+    
     const sessions = await Session.aggregate([
       { $match: filter },
-      { $unwind: "$exercises" },
+      // Lookup معلومات الكوتش
       {
         $lookup: {
-          from: "Exercises",
-          localField: "exercises.exerciseId",
-          foreignField: "exerciseId",
-          as: "exerciseDetails",
+          from: "Coachs",
+          localField: "coachId",
+          foreignField: "coachId",
+          as: "coachInfo",
         },
       },
-      { $unwind: "$exerciseDetails" },
+      { $unwind: { path: "$coachInfo", preserveNullAndEmptyArrays: true } },
+      // Lookup معلومات اللاعب
       {
         $lookup: {
           from: "GymMembers",
@@ -30,36 +40,76 @@ async function getAllSessions(req, res, next) {
         },
       },
       { $unwind: { path: "$memberInfo", preserveNullAndEmptyArrays: true } },
+      // Unwind التمارين
+      { $unwind: "$exercises" },
+      // Lookup تفاصيل التمارين للحصول على العضلات المستهدفة
+      {
+        $lookup: {
+          from: "Exercises",
+          localField: "exercises.exerciseId",
+          foreignField: "exerciseId",
+          as: "exerciseDetails",
+        },
+      },
+      { $unwind: { path: "$exerciseDetails", preserveNullAndEmptyArrays: true } },
+      // تجميع النتائج
       {
         $group: {
           _id: "$sessionId",
+          sessionId: { $first: "$sessionId" },
           duration: { $first: "$duration" },
           status: { $first: "$status" },
           date: { $first: "$date" },
-          memberName: { $first: "$memberInfo.firstName" },
+          coachId: { $first: "$coachId" },
+          memberId: { $first: "$memberId" },
+          // معلومات الكوتش
+          coachName: { 
+            $first: { 
+              $concat: ["$coachInfo.firstName", " ", "$coachInfo.lastName"] 
+            } 
+          },
+          coachEmail: { $first: "$coachInfo.email" },
+          // معلومات اللاعب
+          memberName: { 
+            $first: { 
+              $concat: ["$memberInfo.firstName", " ", "$memberInfo.lastName"] 
+            } 
+          },
+          memberEmail: { $first: "$memberInfo.email" },
+          // العضلات المستهدفة فقط (بدون تكرار)
           targetMuscles: { $addToSet: "$exerciseDetails.targetMuscle" },
         },
       },
+      // ترتيب النتائج
+      { $sort: { date: -1 } },
+      // إزالة الحقول غير المطلوبة
       {
         $project: {
           _id: 0,
-          sessionId: "$_id",
+          sessionId: 1,
           duration: 1,
           status: 1,
           date: 1,
+          coachId: 1,
+          memberId: 1,
           coachName: 1,
+          coachEmail: 1,
+          memberName: 1,
+          memberEmail: 1,
           targetMuscles: 1,
         },
       },
     ]);
 
-    return responseHandler.success(res, "sessions retrived successfully", {
+    return responseHandler.success(res, "sessions retrieved successfully", {
       sessions: sessions,
     });
   } catch (error) {
+    console.error("Error in getAllSessions:", error);
     return responseHandler.error(res, "server error", 500, {
       error: error.message,
     });
   }
 }
+
 export default getAllSessions;

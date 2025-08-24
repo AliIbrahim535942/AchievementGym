@@ -2,18 +2,104 @@ import Session from "../../models/session.js";
 import { responseHandler } from "../../utils/responseHandler.js";
 async function getSession(req, res, next) {
   const { sessionId } = req.params;
-  const { memberId, coachId } = req.user;
+  const { accountType, coachId } = req.user;
   try {
     const session = await Session.findOne({ sessionId });
     if (!session) {
       return responseHandler.notFound(res, "session not found");
     }
-    if (session.memberId != memberId && session.coachId != coachId) {
-      return responseHandler.error(res, "you can't access", 403);
+    if (accountType == "Coach" && coachId != session.coachId) {
+      return responseHandler.error(
+        res,
+        "you can not access to this session ",
+        403
+      );
+    } else if (accountType == "GymMember" && req.user.memberId != sessionId) {
+      return responseHandler.error(
+        res,
+        "you can not access to this session ",
+        403
+      );
     }
-    responseHandler.success(res, "Session info retrived successfully ", {
-      session: session,
-    });
+
+    const sessionInfo = await Session.aggregate([
+      { $match: { sessionId: sessionId } },
+
+      // خزّن التمارين الأصلية
+      {
+        $addFields: {
+          originalExercises: "$exercises",
+        },
+      },
+
+      // اجلب تفاصيل التمارين
+      {
+        $lookup: {
+          from: "Exercises",
+          localField: "exercises.exerciseId",
+          foreignField: "exerciseId",
+          as: "exerciseDetails",
+        },
+      },
+
+      // أعد تشكيل التمارين لتشمل الاسم والوزن
+      {
+        $addFields: {
+          exercises: {
+            $map: {
+              input: "$originalExercises",
+              as: "orig",
+              in: {
+                exerciseId: "$$orig.exerciseId",
+                weight: "$$orig.weight",
+                exerciseName: {
+                  $arrayElemAt: [
+                    {
+                      $map: {
+                        input: {
+                          $filter: {
+                            input: "$exerciseDetails",
+                            as: "detail",
+                            cond: {
+                              $eq: ["$$detail.exerciseId", "$$orig.exerciseId"],
+                            },
+                          },
+                        },
+                        as: "d",
+                        in: "$$d.exerciseName",
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+
+      {
+        $project: {
+          _id: 0,
+          sessionId: 1,
+          duration: 1,
+          memberId: 1,
+          date: 1,
+          coachId: 1,
+          exercises: 1,
+          status: 1,
+        },
+      },
+    ]);
+
+    if (!sessionInfo) {
+      return responseHandler.error(
+        res,
+        "error during match session and exercises",
+        400
+      );
+    }
+    return responseHandler.success(res, "success", sessionInfo[0]);
   } catch (error) {
     return responseHandler.error(res, "server error", 500, {
       error: error.message,
