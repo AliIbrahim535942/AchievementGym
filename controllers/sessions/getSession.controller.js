@@ -14,7 +14,7 @@ async function getSession(req, res, next) {
         "you can not access to this session ",
         403
       );
-    } else if (accountType == "GymMember" && req.user.memberId != sessionId) {
+    } else if (accountType == "GymMember" && req.user.memberId != session.memberId) {
       return responseHandler.error(
         res,
         "you can not access to this session ",
