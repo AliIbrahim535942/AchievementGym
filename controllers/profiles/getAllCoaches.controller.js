@@ -8,7 +8,7 @@ async function getAllCoaches(req, res, next) {
       { coachId: 1, firstName: 1, lastName: 1, sportType: 1 }
     );
     if (coaches.length == 0) {
-      return responseHandler.notFound(res, "there are not any caoches");
+    return responseHandler.success(res, "success", []);
     }
     return responseHandler.success(res, "success", coaches);
   } catch (error) {
