@@ -4,7 +4,7 @@ import { responseHandler } from "../../utils/responseHandler.js";
 async function getAllSessions(req, res, next) {
   const { accountType } = req.user;
   let filter;
-  
+
   try {
     // تحديد الفلتر حسب نوع المستخدم
     if (accountType == "Coach") {
@@ -17,7 +17,7 @@ async function getAllSessions(req, res, next) {
       // إذا كان نوع آخر، لا نعرض أي جلسات
       return responseHandler.error(res, "Unauthorized access", 403);
     }
-    
+
     const sessions = await Session.aggregate([
       { $match: filter },
       // Lookup معلومات الكوتش
@@ -51,7 +51,9 @@ async function getAllSessions(req, res, next) {
           as: "exerciseDetails",
         },
       },
-      { $unwind: { path: "$exerciseDetails", preserveNullAndEmptyArrays: true } },
+      {
+        $unwind: { path: "$exerciseDetails", preserveNullAndEmptyArrays: true },
+      },
       // تجميع النتائج
       {
         $group: {
@@ -63,19 +65,20 @@ async function getAllSessions(req, res, next) {
           coachId: { $first: "$coachId" },
           memberId: { $first: "$memberId" },
           // معلومات الكوتش
-          coachName: { 
-            $first: { 
-              $concat: ["$coachInfo.firstName", " ", "$coachInfo.lastName"] 
-            } 
+          coachName: {
+            $first: {
+              $concat: ["$coachInfo.firstName", " ", "$coachInfo.lastName"],
+            },
           },
           coachEmail: { $first: "$coachInfo.email" },
           // معلومات اللاعب
-          memberName: { 
-            $first: { 
-              $concat: ["$memberInfo.firstName", " ", "$memberInfo.lastName"] 
-            } 
+          memberName: {
+            $first: {
+              $concat: ["$memberInfo.firstName", " ", "$memberInfo.lastName"],
+            },
           },
           memberEmail: { $first: "$memberInfo.email" },
+          imageUrl: { $first: "$memberInfo.imageUrl" },
           // العضلات المستهدفة فقط (بدون تكرار)
           targetMuscles: { $addToSet: "$exerciseDetails.targetMuscle" },
         },
@@ -86,6 +89,7 @@ async function getAllSessions(req, res, next) {
       {
         $project: {
           _id: 0,
+          imageUrl: 1,
           sessionId: 1,
           duration: 1,
           status: 1,

@@ -60,5 +60,10 @@ const signupValidationSchema = Joi.object({
         "sportType must be one of Calisthenics or Body building or Powerlifting",
       "any.required": "sportType is required.",
     }),
+  coachId: Joi.number().integer().positive().messages({
+    "number.base": "coach Id must be a number.",
+    "number.integer": "coach Id must be an integer.",
+    "number.positive": "coach Id must be a positive number.",
+  }),
 });
 export default signupValidationSchema;
