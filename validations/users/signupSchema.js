@@ -65,5 +65,8 @@ const signupValidationSchema = Joi.object({
     "number.integer": "coach Id must be an integer.",
     "number.positive": "coach Id must be a positive number.",
   }),
+  imageUrl: Joi.string().messages({
+    "string.base": "imageUrl must be a string.",
+  }),
 });
 export default signupValidationSchema;

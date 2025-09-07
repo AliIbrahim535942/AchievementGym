@@ -10,8 +10,10 @@ async function getMyMembers(req, res, next) {
       { coachId },
       "memberId firstName lastName imageUrl -_id"
     );
-    if (gymMembers.length==0) {
-      return responseHandler.notFound(res, "there are not any Gym Members");
+    if (gymMembers.length == 0) {
+      return responseHandler.success(res, "there are not any Gym Members", {
+        sessions: [],
+      });
     }
     return responseHandler.success(res, "", { gymMembers: gymMembers });
   } catch (error) {
