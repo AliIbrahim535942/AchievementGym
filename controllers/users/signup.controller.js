@@ -2,6 +2,8 @@ import { responseHandler } from "../../utils/responseHandler.js";
 import { getNextSequence } from "../../models/counter.js";
 import path from "path";
 import Coach from "../../models/coach.js";
+import cloudinary from "../../config/cloudinary.js";
+import streamifier from "streamifier";
 import GymMember from "../../models/gymMember.js";
 export default async function signup(req, res, next) {
   try {
@@ -15,10 +17,24 @@ export default async function signup(req, res, next) {
       password,
       sportType,
     } = req.body;
-    const imageUrl = req.file
-      ? req.file.path
-      : path.join("uploads", "avatar.jpg");
-
+    // const imageUrl = req.file
+    //   ? req.file.path
+    //   : path.join("uploads", "avatar.jpg");
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "userImages" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
+          }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+      });
+    } else {
+      imageUrl = path.join("uploads", "avatar.jpg");
+    }
     if (accountType == "GymMember") {
       if (await GymMember.findOne({ $or: [{ email }, { phoneNumber }] })) {
         return responseHandler.error(res, "this account is already exist", 409);
