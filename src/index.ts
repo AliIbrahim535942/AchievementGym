@@ -5,7 +5,7 @@ import path from "path";
 import connection_db from "./config/connection_db.js";
 // import userRouter from "./routes/users.js";
 import postRouter from "./routes/post.js";
-// import exerciseRouter from "./routes/exercise.js";
+import exerciseRouter from "./routes/exercise.js";
 // import sessionRouter from "./routes/session.js";
 // import profileRouter from "./routes/profile.js";
 
@@ -25,7 +25,7 @@ app.use(
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 // app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
-// app.use("/api/exercises", exerciseRouter);
+app.use("/api/exercises", exerciseRouter);
 // app.use("/api/profiles", profileRouter);
 
 // app.use("/api/sessions", sessionRouter);

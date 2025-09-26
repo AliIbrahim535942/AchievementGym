@@ -1,7 +1,8 @@
+import { Request, Response, NextFunction } from "express";
 import Session from "../../models/session.js";
-import Exercise from "../../models/exercise.js"
+import Exercise from "../../models/exercise.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-async function getProgressExercises(req, res, next) {
+async function getProgressExercises(req:Request, res:Response, next:NextFunction) {
   const { memberId } = req.params;
   try {
     const sessions = await Session.find({ memberId });
@@ -18,14 +19,17 @@ async function getProgressExercises(req, res, next) {
     const exercises = await Exercise.find({
       exerciseId: { $in: uniqueExerciseIds },
     });
-     if (!sessions) {
-       responseHandler.notFound(res, "exercises not found");
-     }
+    if (!sessions) {
+      responseHandler.notFound(res, "exercises not found");
+    }
     responseHandler.success(res, "", { exercises: exercises });
-  } catch (error) {
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 export default getProgressExercises;
