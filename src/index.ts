@@ -6,7 +6,7 @@ import connection_db from "./config/connection_db.js";
 // import userRouter from "./routes/users.js";
 import postRouter from "./routes/post.js";
 import exerciseRouter from "./routes/exercise.js";
-// import sessionRouter from "./routes/session.js";
+import sessionRouter from "./routes/session.js";
 import profileRouter from "./routes/profile.js";
 
 dotenv.config();
@@ -28,7 +28,7 @@ app.use("/api/posts", postRouter);
 app.use("/api/exercises", exerciseRouter);
 app.use("/api/profiles", profileRouter);
 
-// app.use("/api/sessions", sessionRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/", (req, res, next) => {
   res.send("Welcome");
 });

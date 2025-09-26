@@ -1,17 +1,21 @@
+import { Request, Response, NextFunction } from "express";
 import Session from "../../models/session.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-
-async function getAllSessions(req, res, next) {
-  const { accountType } = req.user;
+async function getAllSessions(req:Request, res:Response, next:NextFunction) {
+  const user=req.user;
+ if (!user) {
+   return responseHandler.error(res, "forbidden", 403);
+ }
+  const { accountType } = user;
   let filter;
 
   try {
     // تحديد الفلتر حسب نوع المستخدم
     if (accountType == "Coach") {
-      const { coachId } = req.user;
+      const { coachId } = user;
       filter = { coachId: coachId };
     } else if (accountType == "GymMember") {
-      const { memberId } = req.user;
+      const { memberId } = user;
       filter = { memberId };
     } else {
       // إذا كان نوع آخر، لا نعرض أي جلسات
@@ -108,11 +112,13 @@ async function getAllSessions(req, res, next) {
     return responseHandler.success(res, "sessions retrieved successfully", {
       sessions: sessions,
     });
-  } catch (error) {
-    console.error("Error in getAllSessions:", error);
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 

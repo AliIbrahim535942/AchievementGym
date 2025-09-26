@@ -1,11 +1,15 @@
+import { Request, Response, NextFunction } from "express";
 import { responseHandler } from "../../utils/responseHandler.js";
 import { getNextSequence } from "../../models/counter.js";
-
 import Session from "../../models/session.js";
 import GymMember from "../../models/gymMember.js";
-async function addSession(req, res, next) {
+async function addSession(req:Request, res:Response, next:NextFunction) {
   const { memberId, duration, date, exercises } = req.body;
-  const { accountType, coachId } = req.user;
+  const user=req.user;
+   if (!user) {
+     return responseHandler.error(res, "forbidden", 403);
+   }
+  const { accountType, coachId } = user;
   if (accountType != "Coach") {
     return responseHandler.error(res, "only Coachs can add sessions.", 403);
   }
@@ -35,11 +39,13 @@ async function addSession(req, res, next) {
       coachId: session.coachId,
       memberId: session.memberId,
     });
-  } catch (error) {
-    console.log(error);
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 export default addSession;

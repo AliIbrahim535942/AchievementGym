@@ -1,8 +1,13 @@
+import { Request, Response, NextFunction } from "express";
 import Session from "../../models/session.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-async function getSession(req, res, next) {
+async function getSession(req:Request, res:Response, next:NextFunction) {
   const { sessionId } = req.params;
-  const { accountType, coachId } = req.user;
+  const user=req.user 
+  if (!user) {
+    return responseHandler.error(res, "forbidden", 403);
+  }
+  const { accountType, coachId } = user;
   try {
     const session = await Session.findOne({ sessionId });
     if (!session) {
@@ -14,7 +19,10 @@ async function getSession(req, res, next) {
         "you can not access to this session ",
         403
       );
-    } else if (accountType == "GymMember" && req.user.memberId != session.memberId) {
+    } else if (
+      accountType == "GymMember" &&
+      user.memberId != session.memberId
+    ) {
       return responseHandler.error(
         res,
         "you can not access to this session ",
@@ -100,10 +108,13 @@ async function getSession(req, res, next) {
       );
     }
     return responseHandler.success(res, "success", sessionInfo[0]);
-  } catch (error) {
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 export default getSession;
