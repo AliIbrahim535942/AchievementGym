@@ -1,9 +1,14 @@
+import { Request, Response, NextFunction } from "express";
 import Coach from "../../models/coach.js";
 import GymMember from "../../models/gymMember.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-async function getMemberInfo(req, res, next) {
+async function getMemberInfo(req:Request, res:Response, next:NextFunction) {
   const { memberId } = req.params;
-  const { accountType, coachId } = req.user;
+  const user=req.user;
+   if (!user) {
+    return responseHandler.error(res, "forbidden", 403);
+  }
+  const { accountType, coachId } =user;
   var gymMember;
   try {
     if (accountType === "Coach") {
@@ -18,7 +23,7 @@ async function getMemberInfo(req, res, next) {
         );
       }
     } else if (accountType === "GymMember") {
-      const visterId = req.user.memberId;
+      const visterId = user.memberId;
       if (visterId != memberId) {
         return responseHandler.error(res, "you can only view your profile",403);
       }
@@ -40,10 +45,14 @@ async function getMemberInfo(req, res, next) {
     const profileInfo = { memberInfo: gymMember, coachInfo: coach };
     return responseHandler.success(res, "info retrived successfuly ", profileInfo);
     
-  } catch (error) {
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  }catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
-}
+  }
+
 export default getMemberInfo;

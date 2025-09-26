@@ -1,14 +1,19 @@
+import { Request, Response, NextFunction } from "express";
 import Exercise from "../../models/exercise.js";
 import GymMember from "../../models/gymMember.js";
 import Session from "../../models/session.js";
 import { responseHandler } from "../../utils/responseHandler.js";
 
-async function getProgressData(req, res, next) {
+async function getProgressData(req:Request, res:Response, next:NextFunction) {
   try {
-    const { accountType } = req.user;
+    const user=req.user;
+     if (!user) {
+       return responseHandler.error(res, "forbidden", 403);
+     }
+    const { accountType } = user;
     const { memberId, exerciseId } = req.params;
     const gymMember = await GymMember.findOne({ memberId });
-    const exercise = await Exercise.findOne({ exerciseId:Number(exerciseId) });
+    const exercise = await Exercise.findOne({ exerciseId: Number(exerciseId) });
     if (!exercise) {
       return responseHandler.notFound(res, "exercise not found");
     }
@@ -16,7 +21,7 @@ async function getProgressData(req, res, next) {
       return responseHandler.notFound(res, "member not found");
     }
     if (accountType == "Coach") {
-      const { coachId } = req.user;
+      const { coachId } = user;
 
       if (coachId != gymMember.coachId) {
         return responseHandler.error(
@@ -26,7 +31,7 @@ async function getProgressData(req, res, next) {
         );
       }
     } else if (accountType == "GymMember") {
-      const myId = req.user.memberId;
+      const myId = user.memberId;
       if (memberId != myId) {
         return responseHandler.error(res, "you can not access ", 403);
       }
@@ -50,17 +55,20 @@ async function getProgressData(req, res, next) {
         return null;
       })
       .filter(Boolean) // إزالة null
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .sort((a, b) => new Date(a!.date).getDate() - new Date(b!.date).getDate());
 
     return responseHandler.success(res, "success", {
       exerciseId: exerciseId,
       exerciseName: exercise.exerciseName,
       progress: progress,
     });
-  } catch (error) {
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 
