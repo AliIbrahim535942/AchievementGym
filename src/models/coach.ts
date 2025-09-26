@@ -1,5 +1,17 @@
-import mongoose, { Schema } from "mongoose";
-const coachSchema = new Schema({
+import mongoose, { Schema, Document } from "mongoose";
+
+interface ICoach extends Document {
+  coachId: number;
+  firstName: string;
+  lastName: string;
+  bio: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+  sportType: "Calisthenics" | "Body building" | "Powerlifting";
+  imageUrl: string;
+}
+const coachSchema = new Schema<ICoach>({
   coachId: { type: Number, required: true, unique: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -19,5 +31,5 @@ const coachSchema = new Schema({
   },
   imageUrl: { type: String, required: false },
 });
-const Coach = mongoose.model("Coach", coachSchema, "Coachs");
+const Coach = mongoose.model<ICoach>("Coach", coachSchema, "Coachs");
 export default Coach;

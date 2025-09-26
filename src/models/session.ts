@@ -1,5 +1,18 @@
-import mongoose, { Schema } from "mongoose";
-const sessionSchema = new Schema({
+import mongoose, { Schema, Document } from "mongoose";
+interface IExercise extends Document {
+  exerciseId: number;
+  weight: number;
+}
+interface ISession extends Document {
+  sessionId: number;
+  memberId: number;
+  duration: number;
+  date: Date;
+  coachId: number;
+  exercises: IExercise[];
+  status: "Pending" | "Completed";
+}
+const sessionSchema = new Schema<ISession>({
   sessionId: { type: Number, required: true, unique: true },
   memberId: { type: Number, required: true, ref: "GymMember" },
   duration: { type: Number, required: true },
@@ -21,5 +34,5 @@ const sessionSchema = new Schema({
     default: "Pending",
   },
 });
-const Session = mongoose.model("Session", sessionSchema, "Sessions");
+const Session = mongoose.model<ISession>("Session", sessionSchema, "Sessions");
 export default Session;

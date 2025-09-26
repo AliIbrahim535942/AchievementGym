@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import connection_db from "./config/connection_db.js";
-import userRouter from "./routes/users.js";
+// import userRouter from "./routes/users.js";
 import postRouter from "./routes/post.js";
-import exerciseRouter from "./routes/exercise.js";
-import sessionRouter from "./routes/session.js";
-import profileRouter from "./routes/profile.js";
+// import exerciseRouter from "./routes/exercise.js";
+// import sessionRouter from "./routes/session.js";
+// import profileRouter from "./routes/profile.js";
 
 dotenv.config();
 const app = express();
@@ -23,12 +23,12 @@ app.use(
 );
 // app.options("/*",cors());
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
-app.use("/api/users", userRouter);
+// app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
-app.use("/api/exercises", exerciseRouter);
-app.use("/api/profiles", profileRouter);
+// app.use("/api/exercises", exerciseRouter);
+// app.use("/api/profiles", profileRouter);
 
-app.use("/api/sessions", sessionRouter);
+// app.use("/api/sessions", sessionRouter);
 app.use("/", (req, res, next) => {
   res.send("Welcome");
 });

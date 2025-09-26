@@ -1,9 +1,13 @@
 import Post from "../../models/post.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-async function getAllPosts(req, res, next) {
-  const { pageNumber } = req.params;
+import {Request, Response, NextFunction } from "express";
+async function getAllPosts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const pageNumber = Number(req.params.pageNumber) || 0;
   try {
-    
     const posts = await Post.aggregate([
       {
         $lookup: {
@@ -27,16 +31,19 @@ async function getAllPosts(req, res, next) {
           _id: 0,
         },
       },
-      { $skip: Number(pageNumber) * 10 },
+      { $skip: pageNumber * 10 },
       { $limit: 10 },
     ]);
     return responseHandler.success(res, "The posts fetched successfully ", {
       posts: posts,
     });
-  } catch (error) {
-    return responseHandler.error(res, "server error", 500, {
-      error: error.message,
-    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
 export default getAllPosts;

@@ -30,7 +30,6 @@ async function getMemberInfo(req, res, next) {
     if (!gymMember) {
       return responseHandler.notFound(res, "Member not found");
     }
-
     const coach = await Coach.findOne(
       { coachId: gymMember.coachId },
       "coachId firstName lastName imageUrl -_id"
