@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface ICoach extends Document {
+export interface ICoach extends Document {
   coachId: number;
   firstName: string;
   lastName: string;

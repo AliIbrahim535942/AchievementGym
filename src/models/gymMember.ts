@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-interface IGymMember extends Document {
+export interface IGymMember extends Document {
   memberId: number;
   firstName: string;
   lastName: string;

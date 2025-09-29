@@ -1,10 +1,16 @@
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import PasswordResetToken from "../../models/passwordResetToken.js";
 import GymMember from "../../models/gymMember.js";
 import Coach from "../../models/coach.js";
 import { responseHandler } from "../../utils/responseHandler.js";
 import sendEmail from "../../utils/emailServer.js";
-export default async function forgetPassword(req, res, next) {
+export default async function forgetPassword(
+  req: Request<{ email: string; accountType: string }>,
+  res: Response,
+  next: NextFunction
+) {
+  const SECRET_KEY = process.env.SECRET_KEY || "ABC";
   const { email, accountType } = req.body;
   try {
     let user;
@@ -21,16 +27,16 @@ export default async function forgetPassword(req, res, next) {
     const token = jwt.sign(
       {
         accountType,
-        userId: accountType == "Coach" ? user.coachId : user.memberId,
+        userId: "memberId" in user ? user.memberId : user.coachId,
       },
-      process.env.SECRET_KEY,
+      SECRET_KEY,
       {
         expiresIn: "15m",
       }
     );
 
     await PasswordResetToken.create({
-      userId: accountType == "Coach" ? user.coachId : user.memberId,
+      userId: "memberId" in user ? user.memberId : user.coachId,
       accountType,
       token,
     });
@@ -75,7 +81,12 @@ export default async function forgetPassword(req, res, next) {
       res,
       "check your mail box please your key expires after 15 mintue"
     );
-  } catch (error) {
-    responseHandler.error(res, "server error during email sending", 500);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return responseHandler.error(res, "server error", 500, {
+        error: error.message,
+      });
+    }
+    return responseHandler.error(res, "server error", 500);
   }
 }
