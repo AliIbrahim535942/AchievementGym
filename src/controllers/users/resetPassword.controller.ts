@@ -4,7 +4,7 @@ import PasswordResetToken from "../../models/passwordResetToken.js";
 import GymMember from "../../models/gymMember.js";
 import Coach from "../../models/coach.js";
 import { responseHandler } from "../../utils/responseHandler.js";
-import envVariables from "config/dotenv_config.js";
+import envVariables from "../../config/dotenv_config.js";
 
 export default async function resetPassword(
   req: Request<{ token: string; password: string }>,

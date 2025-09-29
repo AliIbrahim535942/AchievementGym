@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import { responseHandler } from "../../utils/responseHandler.js";
 import Coach from "../../models/coach.js";
 import GymMember from "../../models/gymMember.js";
-import envVariables from "config/dotenv_config.js";
+import envVariables from "../../config/dotenv_config.js";
 async function signin(
   req: Request<{ email: string; password: string; accountType: string }>,
   res: Response,

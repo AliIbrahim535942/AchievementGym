@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import envVariables from "config/dotenv_config.js";
+import envVariables from "../../config/dotenv_config.js";
 import jwt from "jsonwebtoken";
 import PasswordResetToken from "../../models/passwordResetToken.js";
 import GymMember from "../../models/gymMember.js";

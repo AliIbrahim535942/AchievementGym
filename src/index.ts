@@ -1,5 +1,4 @@
 import express from "express";
-import envVariables from "config/dotenv_config.js";
 import cors from "cors";
 import path from "path";
 import connection_db from "./config/connection_db.js";
@@ -8,6 +7,7 @@ import postRouter from "./routes/post.js";
 import exerciseRouter from "./routes/exercise.js";
 import sessionRouter from "./routes/session.js";
 import profileRouter from "./routes/profile.js";
+import envVariables from "./config/dotenv_config.js";
 
 const app = express();
 const port = envVariables.PORT;

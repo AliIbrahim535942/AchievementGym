@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { responseHandler } from "../utils/responseHandler.js";
-import envVariables from "config/dotenv_config.js";
+import envVariables from "../config/dotenv_config.js";
 export default function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
