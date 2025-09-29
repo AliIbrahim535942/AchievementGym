@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import envVariables from "config/dotenv_config.js";
 import jwt from "jsonwebtoken";
 import PasswordResetToken from "../../models/passwordResetToken.js";
 import GymMember from "../../models/gymMember.js";
@@ -10,7 +11,6 @@ export default async function forgetPassword(
   res: Response,
   next: NextFunction
 ) {
-  const SECRET_KEY = process.env.SECRET_KEY || "ABC";
   const { email, accountType } = req.body;
   try {
     let user;
@@ -29,7 +29,7 @@ export default async function forgetPassword(
         accountType,
         userId: "memberId" in user ? user.memberId : user.coachId,
       },
-      SECRET_KEY,
+      envVariables.SECRET_KEY,
       {
         expiresIn: "15m",
       }

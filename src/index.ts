@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import envVariables from "config/dotenv_config.js";
 import cors from "cors";
 import path from "path";
 import connection_db from "./config/connection_db.js";
@@ -9,9 +9,8 @@ import exerciseRouter from "./routes/exercise.js";
 import sessionRouter from "./routes/session.js";
 import profileRouter from "./routes/profile.js";
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 8000;
+const port = envVariables.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

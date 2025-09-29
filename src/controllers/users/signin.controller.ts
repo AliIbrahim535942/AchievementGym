@@ -4,13 +4,13 @@ import { Request, Response, NextFunction } from "express";
 import { responseHandler } from "../../utils/responseHandler.js";
 import Coach from "../../models/coach.js";
 import GymMember from "../../models/gymMember.js";
+import envVariables from "config/dotenv_config.js";
 async function signin(
   req: Request<{ email: string; password: string; accountType: string }>,
   res: Response,
   next: NextFunction
 ) {
   const { email, password, accountType } = req.body;
-  const SECRET_KEY = process.env.SECRET_KEY || "ABC";
   try {
     const user =
       accountType === "Coach"
@@ -31,7 +31,7 @@ async function signin(
     }
     const { password: removerdPassword, ...tokenInfo } = user;
 
-    const token = jwt.sign({ ...tokenInfo, accountType }, SECRET_KEY);
+    const token = jwt.sign({ ...tokenInfo, accountType }, envVariables.SECRET_KEY);
     return responseHandler.success(res, "login successfuly", {
       token: token,
       accountType,
