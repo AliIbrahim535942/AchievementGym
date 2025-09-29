@@ -1,9 +1,10 @@
 import multer from "multer";
 import path from "path";
-
+import { Request ,Response} from "express";
+import { NextFunction } from "express-serve-static-core";
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: Function) => {
   const allowedTypes = /jpeg|jpg|png/;
   const extname = allowedTypes.test(
     path.extname(file.originalname).toLowerCase()
@@ -23,7 +24,7 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 },
 });
 
-const uploadOptional = (fieldName) => (req, res, next) => {
+const uploadOptional = (fieldName:string) => (req:Request, res:Response, next:NextFunction) => {
   const uploader = upload.single(fieldName);
   uploader(req, res, (err) => {
     if (err instanceof multer.MulterError) {

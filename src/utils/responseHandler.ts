@@ -1,18 +1,19 @@
+import { Response } from "express";
 const responseHandler = {
-  success: (res, message, data = {}) => {
+  success: (res: Response, message: string, data = {}) => {
     return res.status(200).json({
       success: true,
       message,
       data,
     });
   },
-  notFound: (res, message) => {
+  notFound: (res: Response, message: string) => {
     return res.status(404).json({
       success: false,
       message,
     });
   },
-  error: (res, message, errorCode = 400, details = {}) => {
+  error: (res: Response, message: string, errorCode = 400, details = {}) => {
     return res.status(errorCode).json({
       success: false,
       message,

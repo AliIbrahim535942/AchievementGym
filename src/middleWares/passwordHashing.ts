@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { responseHandler } from "../utils/responseHandler.js";
-async function passwordHashing(req, res, next) {
+import { NextFunction,Request,Response } from "express";
+async function passwordHashing(req:Request, res:Response, next:NextFunction) {
   try {
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);

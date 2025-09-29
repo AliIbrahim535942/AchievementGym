@@ -8,9 +8,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default async function sendEmail(to, subject, htmlContent) {
+export default async function sendEmail(
+  to: string,
+  subject: string,
+  htmlContent: string
+) {
   try {
-  
     const info = await transporter.sendMail({
       from: envVariables.BREVO_USER,
       to,
@@ -19,7 +22,12 @@ export default async function sendEmail(to, subject, htmlContent) {
     });
     console.log("Email sent:", info.messageId);
     return info;
-  } catch (error) {
-    console.error("Error sending email:", error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return console.error("server error", 500, {
+        error: error.message,
+      });
+    }
+    return console.error("server error", 500);
   }
 }

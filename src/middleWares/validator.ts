@@ -1,6 +1,8 @@
+import { Schema } from "joi";
+import { NextFunction,Request,Response } from "express";
 import { responseHandler } from "../utils/responseHandler.js";
-export default function validate(schema, target) {
-    return (req, res, next) => {
+export default function validate(schema:Schema, target:"body"|"query"|"params") {
+    return (req:Request, res:Response, next:NextFunction) => {
         try {
             const result = schema.validate(req[target], { abortEarly: false });
             if (result?.error) {
