@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Session from "../../models/session.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Session from "../../models/session";
+import { responseHandler } from "../../utils/responseHandler";
 async function getAllSessions(req:Request, res:Response, next:NextFunction) {
   const user=req.user;
  if (!user) {

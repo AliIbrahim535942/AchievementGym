@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import envVariables from "../config/dotenv_config.js";
+import envVariables from "../config/dotenv_config";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 export default async function sendEmail(
   to: string,
   subject: string,
-  htmlContent: string
+  htmlContent: string,
 ) {
   try {
     const info = await transporter.sendMail({

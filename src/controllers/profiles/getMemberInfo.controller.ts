@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import Coach from "../../models/coach.js";
-import GymMember from "../../models/gymMember.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Coach from "../../models/coach";
+import GymMember from "../../models/gymMember";
+import { responseHandler } from "../../utils/responseHandler";
 async function getMemberInfo(req:Request, res:Response, next:NextFunction) {
   const { memberId } = req.params;
   const user=req.user;

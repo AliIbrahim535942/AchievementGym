@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import Exercise from "../../models/exercise.js";
-import GymMember from "../../models/gymMember.js";
-import Session from "../../models/session.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Exercise from "../../models/exercise";
+import GymMember from "../../models/gymMember";
+import Session from "../../models/session";
+import { responseHandler } from "../../utils/responseHandler";
 
 async function getProgressData(req:Request, res:Response, next:NextFunction) {
   try {

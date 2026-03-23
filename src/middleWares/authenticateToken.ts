@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { responseHandler } from "../utils/responseHandler.js";
-import envVariables from "../config/dotenv_config.js";
-import { IUser } from "interfaces/user.js";
+import { responseHandler } from "../utils/responseHandler";
+import envVariables from "../config/dotenv_config";
 export default function authenticateToken(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
@@ -18,7 +17,7 @@ export default function authenticateToken(
       console.log(error);
       return responseHandler.error(res, "Forbidden", 403, {});
     }
-    req.user = { ...(user as IUser) };
+    req.user = user
     return next();
   });
 }

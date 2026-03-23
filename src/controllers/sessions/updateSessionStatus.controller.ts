@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import Session from "../../models/session.js";
-import GymMember from "../../models/gymMember.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Session from "../../models/session";
+import GymMember from "../../models/gymMember";
+import { responseHandler } from "../../utils/responseHandler";
 
 async function updateSessionStatus(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { memberId, sessionId, status } = req.body;
   const user = req.user;
@@ -18,7 +18,7 @@ async function updateSessionStatus(
     return responseHandler.error(
       res,
       "only Coachs can update sessions status.",
-      403
+      403,
     );
   }
   try {

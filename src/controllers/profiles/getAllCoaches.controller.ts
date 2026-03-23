@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Coach from "../../models/coach.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Coach from "../../models/coach";
+import { responseHandler } from "../../utils/responseHandler";
 async function getAllCoaches(req:Request, res:Response, next:NextFunction) {
   const { sportType } = req.params;
   try {

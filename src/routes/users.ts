@@ -1,17 +1,17 @@
-import passwordHashing from "../middleWares/passwordHashing.js";
-import validator from "../middleWares/validator.js";
-import { uploadOptional } from "../middleWares/multerConfig.js";
+import passwordHashing from "../middleWares/passwordHashing";
+import validator from "../middleWares/validator";
+import { uploadOptional } from "../middleWares/multerConfig";
 import { Router } from "express";
 //  Controller
-import signin from "../controllers/users/signin.controller.js";
-import signup from "../controllers/users/signup.controller.js";
-import forgetPassword from "../controllers/users/forgetPassword.controller.js";
-import resetPassword from "../controllers/users/resetPassword.controller.js";
+import signin from "../controllers/users/signin.controller";
+import signup from "../controllers/users/signup.controller";
+import forgetPassword from "../controllers/users/forgetPassword.controller";
+import resetPassword from "../controllers/users/resetPassword.controller";
 //  Validation Schemas
-import signupValidationSchema from "../validations/users/signupSchema.js";
-import signinValidationSchema from "../validations/users/signinSchema.js";
-import forgetPasswordValidationSchema from "../validations/users/forgetPasswordSchema.js";
-import resetPasswordValidationSchema from "../validations/users/resetPasswordSchema.js";
+import signupValidationSchema from "../validations/users/signupSchema";
+import signinValidationSchema from "../validations/users/signinSchema";
+import forgetPasswordValidationSchema from "../validations/users/forgetPasswordSchema";
+import resetPasswordValidationSchema from "../validations/users/resetPasswordSchema";
 
 const userRouter = Router();
 
@@ -21,18 +21,18 @@ userRouter.post(
   validator(signupValidationSchema, "body"),
   uploadOptional("imageUrl"),
   passwordHashing,
-  signup
+  signup,
 );
 userRouter.post(
   "/forgetPassword",
   validator(forgetPasswordValidationSchema, "body"),
-  forgetPassword
+  forgetPassword,
 );
 userRouter.post(
   "/resetPassword",
   validator(resetPasswordValidationSchema, "body"),
   passwordHashing,
-  resetPassword
+  resetPassword,
 );
 
 export default userRouter;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import Session from "../../models/session.js";
-import Exercise from "../../models/exercise.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Session from "../../models/session";
+import Exercise from "../../models/exercise";
+import { responseHandler } from "../../utils/responseHandler";
 async function getProgressExercises(req:Request, res:Response, next:NextFunction) {
   const { memberId } = req.params;
   try {

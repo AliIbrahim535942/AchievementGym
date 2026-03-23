@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import Session from "../../models/session.js";
-import { responseHandler } from "../../utils/responseHandler.js";
-async function getSession(req:Request, res:Response, next:NextFunction) {
+import Session from "../../models/session";
+import { responseHandler } from "../../utils/responseHandler";
+async function getSession(req: Request, res: Response, next: NextFunction) {
   const { sessionId } = req.params;
-  const user=req.user 
+  const user = req.user;
   if (!user) {
     return responseHandler.error(res, "forbidden", 403);
   }
@@ -17,7 +17,7 @@ async function getSession(req:Request, res:Response, next:NextFunction) {
       return responseHandler.error(
         res,
         "you can not access to this session ",
-        403
+        403,
       );
     } else if (
       accountType == "GymMember" &&
@@ -26,7 +26,7 @@ async function getSession(req:Request, res:Response, next:NextFunction) {
       return responseHandler.error(
         res,
         "you can not access to this session ",
-        403
+        403,
       );
     }
 
@@ -104,7 +104,7 @@ async function getSession(req:Request, res:Response, next:NextFunction) {
       return responseHandler.error(
         res,
         "error during match session and exercises",
-        400
+        400,
       );
     }
     return responseHandler.success(res, "success", sessionInfo[0]);

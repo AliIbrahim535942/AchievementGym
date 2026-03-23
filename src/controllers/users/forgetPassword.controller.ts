@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from "express";
-import envVariables from "../../config/dotenv_config.js";
+import envVariables from "../../config/dotenv_config";
 import jwt from "jsonwebtoken";
-import PasswordResetToken from "../../models/passwordResetToken.js";
-import GymMember from "../../models/gymMember.js";
-import Coach from "../../models/coach.js";
-import { responseHandler } from "../../utils/responseHandler.js";
-import sendEmail from "../../utils/emailServer.js";
+import PasswordResetToken from "../../models/passwordResetToken";
+import GymMember from "../../models/gymMember";
+import Coach from "../../models/coach";
+import { responseHandler } from "../../utils/responseHandler";
+import sendEmail from "../../utils/emailServer";
 export default async function forgetPassword(
   req: Request<{ email: string; accountType: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { email, accountType } = req.body;
   try {
@@ -32,7 +32,7 @@ export default async function forgetPassword(
       envVariables.SECRET_KEY,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     await PasswordResetToken.create({
@@ -75,11 +75,11 @@ export default async function forgetPassword(
   </div>
 </body>
 </html>
-`
+`,
     );
     return responseHandler.success(
       res,
-      "check your mail box please your key expires after 15 mintue"
+      "check your mail box please your key expires after 15 mintue",
     );
   } catch (error: unknown) {
     if (error instanceof Error) {

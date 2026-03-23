@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response, NextFunction } from "express";
-import { responseHandler } from "../../utils/responseHandler.js";
-import Coach from "../../models/coach.js";
-import GymMember from "../../models/gymMember.js";
-import envVariables from "../../config/dotenv_config.js";
+import { responseHandler } from "../../utils/responseHandler";
+import Coach from "../../models/coach";
+import GymMember from "../../models/gymMember";
+import envVariables from "../../config/dotenv_config";
 async function signin(
   req: Request<{ email: string; password: string; accountType: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { email, password, accountType } = req.body;
   try {
@@ -16,11 +16,11 @@ async function signin(
       accountType === "Coach"
         ? await Coach.findOne(
             { email },
-            "sportType coachId email password -_id"
+            "sportType coachId email password -_id",
           )
         : await GymMember.findOne(
             { email },
-            "memberId email password coachId -_id"
+            "memberId email password coachId -_id",
           );
     if (!user) {
       return responseHandler.notFound(res, "account is not exist");
@@ -31,7 +31,10 @@ async function signin(
     }
     const { password: removerdPassword, ...tokenInfo } = user;
 
-    const token = jwt.sign({ ...tokenInfo, accountType }, envVariables.SECRET_KEY);
+    const token = jwt.sign(
+      { ...tokenInfo, accountType },
+      envVariables.SECRET_KEY,
+    );
     return responseHandler.success(res, "login successfuly", {
       token: token,
       accountType,

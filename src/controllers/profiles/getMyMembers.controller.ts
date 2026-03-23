@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import GymMember from "../../models/gymMember.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import GymMember from "../../models/gymMember";
+import { responseHandler } from "../../utils/responseHandler";
 async function getMyMembers(req:Request, res:Response, next:NextFunction) {
   const user=req.user
    if (!user) {

@@ -1,9 +1,9 @@
-import { responseHandler } from "../../utils/responseHandler.js";
-import { getNextSequence } from "../../models/counter.js";
-import Coach from "../../models/coach.js";
-import cloudinary from "../../config/cloudinary.js";
+import { responseHandler } from "../../utils/responseHandler";
+import { getNextSequence } from "../../models/counter";
+import Coach from "../../models/coach";
+import cloudinary from "../../config/cloudinary";
 import streamifier from "streamifier";
-import GymMember from "../../models/gymMember.js";
+import GymMember from "../../models/gymMember";
 import { Response, Request, NextFunction } from "express";
 export default async function signup(
   req: Request<{
@@ -17,7 +17,7 @@ export default async function signup(
     sportType: "Coach" | "GymMember";
   }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const {
@@ -39,8 +39,10 @@ export default async function signup(
           { folder: "userImages" },
           (error, result) => {
             if (error) return reject(error);
-            else if(result){resolve(result.secure_url);}
-          }
+            else if (result) {
+              resolve(result.secure_url);
+            }
+          },
         );
         streamifier.createReadStream(req.file!.buffer).pipe(uploadStream);
       });
@@ -77,7 +79,7 @@ export default async function signup(
       return responseHandler.success(
         res,
         `user craeated successfuly`,
-        memberReturnedInfo
+        memberReturnedInfo,
       );
     } else if (accountType == "Coach") {
       if (await Coach.findOne({ $or: [{ email }, { phoneNumber }] })) {
@@ -107,7 +109,7 @@ export default async function signup(
       return responseHandler.success(
         res,
         `coach craeated successfuly`,
-        coachReturnedInfo
+        coachReturnedInfo,
       );
     }
   } catch (error: unknown) {

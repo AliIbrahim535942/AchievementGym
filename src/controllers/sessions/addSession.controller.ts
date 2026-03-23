@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { responseHandler } from "../../utils/responseHandler.js";
-import { getNextSequence } from "../../models/counter.js";
-import Session from "../../models/session.js";
-import GymMember from "../../models/gymMember.js";
+import { responseHandler } from "../../utils/responseHandler";
+import { getNextSequence } from "../../models/counter";
+import Session from "../../models/session";
+import GymMember from "../../models/gymMember";
 async function addSession(req:Request, res:Response, next:NextFunction) {
   const { memberId, duration, date, exercises } = req.body;
   const user=req.user;

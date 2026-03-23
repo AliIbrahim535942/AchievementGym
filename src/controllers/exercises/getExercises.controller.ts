@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Exercise from "../../models/exercise.js";
-import { responseHandler } from "../../utils/responseHandler.js";
+import Exercise from "../../models/exercise";
+import { responseHandler } from "../../utils/responseHandler";
 async function getExercises(req: Request, res: Response, next: NextFunction) {
   const user = req.user;
   if (!user) {

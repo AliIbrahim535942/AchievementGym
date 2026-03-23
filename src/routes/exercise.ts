@@ -1,8 +1,8 @@
 import { Router } from "express";
-import authenticateToken from "../middleWares/authenticateToken.js";
+import authenticateToken from "../middleWares/authenticateToken";
 //  Controller
-import getExercises from "../controllers/exercises/getExercises.controller.js";
-import getProgressExercises from "../controllers/exercises/getProgressExrcises.controller.js";
+import getExercises from "../controllers/exercises/getExercises.controller";
+import getProgressExercises from "../controllers/exercises/getProgressExrcises.controller";
 //  Validation Schemas
 
 const exerciseRouter = Router();
